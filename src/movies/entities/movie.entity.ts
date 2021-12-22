@@ -40,4 +40,7 @@ export class Movie {
 
   @Column()
   vote_count: number;
+
+  @Column({ default: false })
+  watched: boolean;
 }

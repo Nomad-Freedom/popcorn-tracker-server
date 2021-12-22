@@ -1,14 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { MoviesSearch } from './interfaces/movies-search.interface';
+import { MoviesHttpService } from './movies-http.service';
 
 @Injectable()
 export class MoviesService {
+  constructor(private moviesHttpService: MoviesHttpService) {}
   create(createMovieDto: CreateMovieDto) {
     return 'This action adds a new movie';
   }
 
-  findAll() {
+  async search(query: string): Promise<MoviesSearch> {
+    return this.moviesHttpService.findMovies(query);
+  }
+
+  async findAll() {
     return `This action returns all movies`;
   }
 

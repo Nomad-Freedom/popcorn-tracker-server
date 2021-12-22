@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { MoviesSearch } from './interfaces/movies-search.interface';
 
 @Controller('movies')
 export class MoviesController {
@@ -15,6 +25,10 @@ export class MoviesController {
   @Get()
   findAll() {
     return this.moviesService.findAll();
+  }
+  @Get('/search')
+  search(@Query('query') query: string): Promise<MoviesSearch> {
+    return this.moviesService.search(query);
   }
 
   @Get(':id')
