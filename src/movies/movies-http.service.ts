@@ -5,11 +5,8 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
-import {
-  MoviesSearch,
-  MoviesSearchError,
-  ResultMin,
-} from './interfaces/movies-search.interface';
+import { MovieDetails } from './interfaces/movie-details.interface';
+import { MoviesSearch, ResultMin } from './interfaces/movies-search.interface';
 
 @Injectable()
 export class MoviesHttpService {
@@ -50,10 +47,32 @@ export class MoviesHttpService {
 
       return { ...data, results: newResult };
     } catch (error) {
-      const moviesError: MoviesSearchError = error;
-      if (moviesError.status_code === 34) {
-        throw new NotFoundException(moviesError.status_message);
+      if (error.status_code === 34) {
+        throw new NotFoundException(error.status_message);
       }
+      throw new InternalServerErrorException();
+    }
+  }
+
+  // find movie from tmdb by Id and returns movie details
+  async findMovieById(id: number): Promise<MovieDetails> {
+    try {
+      const { data } = await axios.get<MovieDetails>(
+        `${this.MOVIE_TRAILER_URL}${id}`,
+        {
+          params: {
+            api_key: this.API_KEY,
+            language: 'en-US',
+          },
+        },
+      );
+      return data;
+    } catch (error) {
+      // if movie was not found
+      if (error.status_code === 34) {
+        throw new NotFoundException(error.status_message);
+      }
+      console.error(error);
       throw new InternalServerErrorException();
     }
   }

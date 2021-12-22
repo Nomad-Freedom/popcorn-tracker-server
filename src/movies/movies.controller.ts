@@ -13,6 +13,7 @@ import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MoviesSearch } from './interfaces/movies-search.interface';
 import { QueryMoviesDto } from './dto/query-movies.dto';
+import { MovieDetails } from './interfaces/movie-details.interface';
 
 @Controller('movies')
 export class MoviesController {
@@ -30,6 +31,11 @@ export class MoviesController {
   @Get('/search')
   search(@Query() queryMoviesDto: QueryMoviesDto): Promise<MoviesSearch> {
     return this.moviesService.search(queryMoviesDto);
+  }
+
+  @Get('/search/:id')
+  searchOne(@Param('id') id: string): Promise<MovieDetails> {
+    return this.moviesService.searchOne(+id);
   }
 
   @Get(':id')
