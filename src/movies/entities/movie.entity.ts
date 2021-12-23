@@ -3,13 +3,19 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 @Entity()
 export class Movie {
   @Column()
-  adult: boolean;
+  backdrop_path: string;
 
   @Column()
-  backdrop_path: string;
+  genres: string;
+
+  @Column()
+  homepage: string;
 
   @PrimaryColumn()
   id: number;
+
+  @Column()
+  imdb_id: string;
 
   @Column()
   original_language: string;
@@ -20,20 +26,26 @@ export class Movie {
   @Column('text')
   overview: string;
 
-  @Column()
-  popularity: number;
-
-  @Column()
+  @Column({ nullable: true })
   poster_path: string;
 
   @Column()
   release_date: string;
 
   @Column()
+  runtime: number;
+
+  @Column()
+  status: string;
+
+  @Column()
+  tagline: string;
+
+  @Column()
   title: string;
 
   @Column()
-  video: boolean;
+  video: string;
 
   @Column()
   vote_average: number;
@@ -41,6 +53,6 @@ export class Movie {
   @Column()
   vote_count: number;
 
-  @Column({ default: false })
+  @Column()
   watched: boolean;
 }
