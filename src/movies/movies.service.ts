@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { QueryMoviesDto } from './dto/query-movies.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
-import { MovieDetails } from './interfaces/movie-details.interface';
+import {
+  MovieDetails,
+  MovieDetailsResponse,
+} from './interfaces/movie-details.interface';
 import { MoviesSearch } from './interfaces/movies-search.interface';
 import { MoviesHttpService } from './movies-http.service';
 
@@ -18,7 +21,7 @@ export class MoviesService {
     return this.moviesHttpService.findMovies(query);
   }
 
-  searchOne(id: number): Promise<MovieDetails> {
+  searchOne(id: number): Promise<MovieDetailsResponse> {
     return this.moviesHttpService.findMovieById(id);
   }
 

@@ -31,8 +31,3 @@ export interface MoviesSearch {
   total_pages: number;
   total_results: number;
 }
-export interface MoviesSearchError {
-  status_message: string;
-  success?: boolean;
-  status_code: number;
-}

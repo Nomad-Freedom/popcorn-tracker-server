@@ -5,8 +5,17 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
-import { MovieDetails } from './interfaces/movie-details.interface';
-import { MoviesSearch, ResultMin } from './interfaces/movies-search.interface';
+import {
+  MovieDetails,
+  MovieDetailsResponse,
+  MovieTrailer,
+} from './interfaces/movie-details.interface';
+import { MoviesError } from './interfaces/movies-error.interface';
+import {
+  MoviesSearch,
+  Result,
+  ResultMin,
+} from './interfaces/movies-search.interface';
 
 @Injectable()
 export class MoviesHttpService {
@@ -35,45 +44,82 @@ export class MoviesHttpService {
         },
       });
       //add proper image url to images and minimize results movie object
-      const newResult: ResultMin[] = data.results.map((movie) => ({
-        id: movie.id,
-        original_language: movie.original_language,
-        original_title: movie.original_title,
-        overview: movie.overview,
-        poster_path: `${this.IMAGE_URL}${movie.poster_path}`,
-        release_date: movie.release_date,
-        title: movie.title,
-      }));
+      const newResult: ResultMin[] = this.modifyMoviesResult(
+        data.results as Result[],
+      );
 
       return { ...data, results: newResult };
     } catch (error) {
-      if (error.status_code === 34) {
-        throw new NotFoundException(error.status_message);
-      }
-      throw new InternalServerErrorException();
+      this.errorHandler(error as MoviesError);
     }
   }
 
   // find movie from tmdb by Id and returns movie details
-  async findMovieById(id: number): Promise<MovieDetails> {
+  async findMovieById(id: number): Promise<MovieDetailsResponse> {
+    const axiosConfig = {
+      params: {
+        api_key: this.API_KEY,
+        language: 'en-US',
+      },
+    };
     try {
-      const { data } = await axios.get<MovieDetails>(
-        `${this.MOVIE_TRAILER_URL}${id}`,
-        {
-          params: {
-            api_key: this.API_KEY,
-            language: 'en-US',
-          },
-        },
+      const resultTrailers = axios.get<MovieTrailer>(
+        `${this.MOVIE_TRAILER_URL}${id}/videos`, // https://api.themoviedb.org/3/movie/{id}/videos
+        axiosConfig,
       );
-      return data;
+      const resultDetails = axios.get<MovieDetails>(
+        `${this.MOVIE_TRAILER_URL}${id}`,
+        axiosConfig,
+      );
+
+      const [{ data: movieTrailers }, { data: movieDetails }] =
+        await Promise.all([resultTrailers, resultDetails]);
+
+      const trailer = `https://www.youtube.com/watch?v=${
+        movieTrailers.results.find(
+          (trailer) => trailer.type.toLowerCase() === 'trailer',
+        ).key
+      }`;
+      return {
+        backdrop_path: `${this.IMAGE_URL}${movieDetails.backdrop_path}`,
+        genres: movieDetails.genres,
+        homepage: movieDetails.homepage,
+        id: movieDetails.id,
+        imdb_id: movieDetails.imdb_id,
+        original_language: movieDetails.original_language,
+        original_title: movieDetails.original_title,
+        overview: movieDetails.overview,
+        poster_path: `${this.IMAGE_URL}${movieDetails.poster_path}`,
+        release_date: movieDetails.release_date,
+        runtime: movieDetails.runtime,
+        status: movieDetails.status,
+        tagline: movieDetails.tagline,
+        title: movieDetails.title,
+        video: trailer,
+        vote_average: movieDetails.vote_average,
+        vote_count: movieDetails.vote_count,
+      };
     } catch (error) {
-      // if movie was not found
-      if (error.status_code === 34) {
-        throw new NotFoundException(error.status_message);
-      }
-      console.error(error);
-      throw new InternalServerErrorException();
+      this.errorHandler(error as MoviesError);
     }
+  }
+
+  private modifyMoviesResult(results: Result[]): ResultMin[] {
+    return results.map((movie) => ({
+      id: movie.id,
+      original_language: movie.original_language,
+      original_title: movie.original_title,
+      overview: movie.overview,
+      poster_path: `${this.IMAGE_URL}${movie.poster_path}`,
+      release_date: movie.release_date,
+      title: movie.title,
+    }));
+  }
+
+  private errorHandler(error: MoviesError): void {
+    if (error.status_code === 34) {
+      throw new NotFoundException(error.status_message);
+    }
+    throw new InternalServerErrorException();
   }
 }
