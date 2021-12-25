@@ -36,8 +36,8 @@ export class MoviesService {
     return `This action returns all movies`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} movie`;
+  findOne(id: number): Promise<Movie> {
+    return this.moviesRepository.findMovie(id);
   }
 
   update(id: number, updateMovieDto: UpdateMovieDto) {
