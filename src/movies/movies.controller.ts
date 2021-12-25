@@ -44,8 +44,11 @@ export class MoviesController {
     return this.moviesService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMovieDto: UpdateMovieDto) {
+  @Patch(':id/watched')
+  update(
+    @Param('id') id: string,
+    @Body() updateMovieDto: UpdateMovieDto,
+  ): Promise<Movie> {
     return this.moviesService.update(+id, updateMovieDto);
   }
 

@@ -49,8 +49,15 @@ export class MoviesService {
     return this.moviesRepository.findMovie(id);
   }
 
-  update(id: number, updateMovieDto: UpdateMovieDto) {
-    return `This action updates a #${id} movie`;
+  async update(id: number, updateMovieDto: UpdateMovieDto): Promise<Movie> {
+    const { watched } = updateMovieDto;
+    const movie = await this.moviesRepository.findMovie(id);
+
+    movie.watched = watched;
+    await this.moviesRepository.save(movie).catch((_error) => {
+      throw new InternalServerErrorException();
+    });
+    return movie;
   }
 
   async remove(id: number): Promise<void> {
