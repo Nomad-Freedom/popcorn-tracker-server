@@ -26,7 +26,7 @@ export class MoviesController {
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<Movie[]> {
     return this.moviesService.findAll();
   }
   @Get('/search')

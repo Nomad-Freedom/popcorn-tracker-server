@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { QueryMoviesDto } from './dto/query-movies.dto';
@@ -32,8 +36,13 @@ export class MoviesService {
     return this.moviesHttpService.findMovieById(id);
   }
 
-  async findAll() {
-    return `This action returns all movies`;
+  async findAll(): Promise<Movie[]> {
+    try {
+      const movies = await this.moviesRepository.find({});
+      return movies;
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
   }
 
   findOne(id: number): Promise<Movie> {
@@ -44,7 +53,10 @@ export class MoviesService {
     return `This action updates a #${id} movie`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} movie`;
+  async remove(id: number): Promise<void> {
+    const result = await this.moviesRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`movie with id:${id} cannot be found`);
+    }
   }
 }
