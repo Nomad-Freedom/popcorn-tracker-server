@@ -50,7 +50,7 @@ export class MoviesController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<void> {
     return this.moviesService.remove(+id);
   }
 }
