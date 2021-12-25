@@ -1,19 +1,26 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { QueryMoviesDto } from './dto/query-movies.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { Movie } from './entities/movie.entity';
 import {
   MovieDetails,
   MovieDetailsResponse,
 } from './interfaces/movie-details.interface';
 import { MoviesSearch } from './interfaces/movies-search.interface';
 import { MoviesHttpService } from './movies-http.service';
+import { MoviesRepository } from './movies.repository';
 
 @Injectable()
 export class MoviesService {
-  constructor(private moviesHttpService: MoviesHttpService) {}
-  create(createMovieDto: CreateMovieDto) {
-    return 'This action adds a new movie';
+  constructor(
+    private moviesHttpService: MoviesHttpService,
+    @InjectRepository(MoviesRepository)
+    private moviesRepository: MoviesRepository,
+  ) {}
+  create(createMovieDto: CreateMovieDto): Promise<Movie> {
+    return this.moviesRepository.saveMovie(createMovieDto);
   }
 
   search(queryMoviesDto: QueryMoviesDto): Promise<MoviesSearch> {

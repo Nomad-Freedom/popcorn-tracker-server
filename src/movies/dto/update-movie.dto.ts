@@ -1,4 +1,7 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateMovieDto } from './create-movie.dto';
+import { IsBoolean, IsNotEmpty } from 'class-validator';
 
-export class UpdateMovieDto extends PartialType(CreateMovieDto) {}
+export class UpdateMovieDto {
+  @IsNotEmpty()
+  @IsBoolean()
+  watched: boolean;
+}

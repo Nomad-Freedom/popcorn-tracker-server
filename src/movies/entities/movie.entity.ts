@@ -47,7 +47,7 @@ export class Movie {
   @Column()
   video: string;
 
-  @Column()
+  @Column('float')
   vote_average: number;
 
   @Column()

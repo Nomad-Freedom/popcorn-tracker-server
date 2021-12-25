@@ -13,17 +13,15 @@ import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MoviesSearch } from './interfaces/movies-search.interface';
 import { QueryMoviesDto } from './dto/query-movies.dto';
-import {
-  MovieDetails,
-  MovieDetailsResponse,
-} from './interfaces/movie-details.interface';
+import { MovieDetailsResponse } from './interfaces/movie-details.interface';
+import { Movie } from './entities/movie.entity';
 
 @Controller('movies')
 export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
 
   @Post()
-  create(@Body() createMovieDto: CreateMovieDto) {
+  create(@Body() createMovieDto: CreateMovieDto): Promise<Movie> {
     return this.moviesService.create(createMovieDto);
   }
 
