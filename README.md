@@ -51,4 +51,4 @@ was built using Node, Nest.js, Typescript, and Postgres.
 
 - :paperclip: [My Resume/CV]()
 - :email: inquiry@bennyhernandez.com
-- :url: [bennyhernandez.com](https://www.bennyhernandez.com)
+- :link: [bennyhernandez.com](https://www.bennyhernandez.com)
