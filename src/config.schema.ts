@@ -11,4 +11,5 @@ export const configValidationSchema = Joi.object({
   DB_PASSWORD: Joi.string().required(),
   DB_DATABASE: Joi.string().required(),
   PORT: Joi.number().default(8000),
+  FRONT_URL: Joi.string().default('http://localhost:3000'),
 });
