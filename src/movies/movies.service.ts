@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateMovieDto } from './dto/create-movie.dto';
+import { FilterMoviesDto } from './dto/filter-movies.dto';
 import { QueryMoviesDto } from './dto/query-movies.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { Movie } from './entities/movie.entity';
@@ -36,9 +37,12 @@ export class MoviesService {
     return this.moviesHttpService.findMovieById(id);
   }
 
-  async findAll(): Promise<Movie[]> {
+  async findAll(filterMovieDto: FilterMoviesDto): Promise<Movie[]> {
     try {
-      const movies = await this.moviesRepository.find({});
+      const movies = await this.moviesRepository.find({
+        order: { release_date: 'DESC' },
+        where: { watched: filterMovieDto.watched },
+      });
       return movies;
     } catch (error) {
       throw new InternalServerErrorException();

@@ -15,6 +15,7 @@ import { MoviesSearch } from './interfaces/movies-search.interface';
 import { QueryMoviesDto } from './dto/query-movies.dto';
 import { MovieDetailsResponse } from './interfaces/movie-details.interface';
 import { Movie } from './entities/movie.entity';
+import { FilterMoviesDto } from './dto/filter-movies.dto';
 
 @Controller('movies')
 export class MoviesController {
@@ -26,8 +27,8 @@ export class MoviesController {
   }
 
   @Get()
-  findAll(): Promise<Movie[]> {
-    return this.moviesService.findAll();
+  findAll(@Query() filterMovieDto: FilterMoviesDto): Promise<Movie[]> {
+    return this.moviesService.findAll(filterMovieDto);
   }
   @Get('/search')
   search(@Query() queryMoviesDto: QueryMoviesDto): Promise<MoviesSearch> {
