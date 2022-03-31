@@ -14,7 +14,13 @@ import { MoviesModule } from './movies/movies.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
+        const isProduction = configService.get('STAGE') === 'prod';
+
         return {
+          ssl: isProduction,
+          extra: {
+            ssl: isProduction ? { rejectUnauthorized: false } : null,
+          },
           type: 'postgres',
           host: configService.get('DB_HOST'),
           port: configService.get('DB_PORT'),

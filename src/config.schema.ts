@@ -10,4 +10,5 @@ export const configValidationSchema = Joi.object({
   DB_USERNAME: Joi.string().required(),
   DB_PASSWORD: Joi.string().required(),
   DB_DATABASE: Joi.string().required(),
+  PORT: Joi.number().default(8000),
 });
