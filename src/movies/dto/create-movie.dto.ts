@@ -10,7 +10,6 @@ export class CreateMovieDto {
   genres: string;
 
   @IsString()
-  @IsNotEmpty()
   homepage: string;
 
   @IsNumber()
@@ -18,7 +17,6 @@ export class CreateMovieDto {
   id: number;
 
   @IsString()
-  @IsNotEmpty()
   imdb_id: string;
 
   @IsString()
@@ -30,7 +28,6 @@ export class CreateMovieDto {
   original_title: string;
 
   @IsString()
-  @IsNotEmpty()
   overview: string;
 
   @IsNotEmpty()
@@ -41,7 +38,6 @@ export class CreateMovieDto {
   release_date: string;
 
   @IsNumber()
-  @IsNotEmpty()
   runtime: number;
 
   @IsString()
@@ -49,7 +45,6 @@ export class CreateMovieDto {
   status: string;
 
   @IsString()
-  @IsNotEmpty()
   tagline: string;
 
   @IsString()

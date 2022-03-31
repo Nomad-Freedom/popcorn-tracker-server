@@ -32,7 +32,7 @@ export class Movie {
   @Column()
   release_date: string;
 
-  @Column()
+  @Column({ default: 0 })
   runtime: number;
 
   @Column()
